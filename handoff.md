@@ -55,6 +55,28 @@ based on the four attached skills and all 20 nelsonxlee articles. **No code yet.
   pointer. From here on, **this repo is the source of truth**. Still no code. The rest of M0-02
   (LICENSE, README, .gitignore, `.claude/agents/jm-*.md`) hasn't been done yet.
 
+- **2026-09-30 (later): sandcastle + Matt Pocock skills adopted (ADR-020), uncommitted.**
+  - `docs/harness/sandcastle.md` covers Mode B: WSL agent farm → Docker sandboxes, ≤4 parallel,
+    implement → `pnpm verify` → verifier with a structured `VerifierReport`. Restrictions SC-1..SC-9.
+  - Intake: SkillSpector on `mattpocock/sandcastle@e99f832` (v0.12.0) gave a raw CRITICAL /
+    DO_NOT_INSTALL (485 findings). All 2 CRITICAL + 177 HIGH findings were traced → verdict
+    **APPROVE_WITH_RESTRICTIONS** (`docs/harness/intake/sandcastle.yaml` + raw JSON). The CRITICALs
+    are vulnerable deps in sandcastle's docs site and devDeps and aren't shipped.
+  - Open sandcastle bugs that shaped the design: #854 (worktree metadata corruption), #859/#876/#924/#940/#996
+    (Windows). Mitigation: run only from the disposable WSL clone `~/jm-farm`.
+  - Matt Pocock skills: 5 from the approved pinned SkillVault copy (`@3cca18b`) deployed project-local
+    with `skill-profile.ps1` (→ `.agents/skills`) and mirrored to `.claude/skills` (identical):
+    `tdd`, `diagnosing-bugs`, `resolving-merge-conflicts`, `to-tickets`, `writing-for-agents`.
+  - Tickets are now **one file each**: `docs/plans/M0/tickets/` (16, incl. the new **M0-16 sandcastle
+    agent farm**) and `docs/plans/M1/tickets/` (21), with `Status:`/`Blocked by:` headers. Tracker config
+    is in `docs/agents/issue-tracker.md`, domain mapping in `docs/agents/domain.md`, and AGENTS.md has an
+    `## Agent skills` block. The milestone files are now indexes.
+  - Also updated: CONVENTIONS §9 (which skill when; the Drift loop is now §10), the harness README
+    (Mode A/B, Matt Pocock lessons), the orchestrator/implementer prompts, gates (skill-mirror +
+    sandcastle-safety gates), SEC-22, architecture pins (`@ai-hero/sandcastle` 0.12.0 root devDep),
+    M0-03 allowlist, the M0-14 gates contract, the skills audit and the ROADMAP.
+  - Sandcastle source clone (read-only, never installed): `C:\Users\a2021\dev\refs\sandcastle` @ v0.12.0.
+
 ## Files in flight
 
 None once the comprehension-check fixes are applied (see the log).
@@ -83,4 +105,7 @@ None once the comprehension-check fixes are applied (see the log).
 3. Build: open Claude Code (Opus) **in this repo**, paste `docs/harness/prompts/orchestrator.md`, and
    finish M0-02: the repo and the docs commit already exist, so it only needs LICENSE, README,
    .gitignore, .gitattributes, .node-version and `.claude/agents/`. Then continue with M0-03.
-4. After the M1 exit: dogfood for a week, then expand M2 cards.
+4. M0-16 (after M0-03) needs Richard for two steps: enable Node in WSL (the ticket has the commands) and
+   create a dedicated `claude setup-token` token, pasted into `~/jm-farm/.sandcastle/.env`. From M0 wave 4,
+   parallel waves run in Mode B.
+5. After the M1 exit: dogfood for a week, then expand M2 with the `to-tickets` skill.

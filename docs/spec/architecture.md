@@ -75,6 +75,7 @@ has the most reuse.
 | tsx / tsup | 4.23.15 / 8.5.1 | dev runner / build for server + CLI |
 | ulid | 3.0.2 | Sortable ids |
 | openai (M2) | 7.25.0 | OpenAI-compatible client for OpenRouter / Ollama / OpenAI |
+| @ai-hero/sandcastle (dev, root) | **0.12.0** | Mode B agent orchestration in Docker sandboxes. APPROVE_WITH_RESTRICTIONS (`docs/harness/intake/sandcastle.yaml`). Runs only from the WSL agent farm |
 
 ## 3. Architecture style
 

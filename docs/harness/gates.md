@@ -20,13 +20,16 @@
 - `toMatchSnapshot` / `toMatchInlineSnapshot` anywhere (CONVENTIONS §5)
 - secret patterns in tracked files (SEC-05)
 - web `dist` main bundle > 300 KB gzip (optimization §1)
+- `.claude/skills/*` and `.agents/skills/*` differ (the pinned Matt Pocock copies must stay identical)
+- `.sandcastle/implement-prompt.md` / `verify-prompt.md` drift from `docs/harness/prompts/*` shared paragraphs
+- `noSandbox`, `devices:`, `groups:`, `/var/run/docker.sock` appear in `.sandcastle/**` runner code (SC-2/SC-3)
 
 ## 2. Gate levels
 
 | Gate | When | Who | Pass condition |
 |---|---|---|---|
 | **G0 card-local** | before the implementer reports DONE | implementer | the card's acceptance commands + `pnpm verify` green |
-| **G1 verify** | after DONE | verifier (haiku) | independent re-run of G0 on the card branch. `git diff --name-only main...HEAD` ⊆ the card's Owns. No `package.json`/lockfile diff unless the card owns them. No test breaks CONVENTIONS §5 |
+| **G1 verify** | after DONE | verifier (haiku). **Mode B:** the sandcastle verifier run inside the same sandbox after `exec('pnpm verify')`, emitting a `VerifierReport` JSON (`.sandcastle/reports/<ID>.json`) | independent re-run of G0 on the card branch. `git diff --name-only main...HEAD` ⊆ the card's Owns. No `package.json`/lockfile diff unless the card owns them. No test breaks CONVENTIONS §5 |
 | **G2 merge** | after G1 PASS | orchestrator | `git merge --no-ff` then `pnpm verify` on `main` is green, else revert |
 | **G3 wave** | after every card in a wave is merged | orchestrator | `pnpm verify:full` green. Wave report written |
 | **G4 milestone** | end of a milestone | orchestrator + security auditor (opus) | exit criteria in the milestone plan each have evidence. Security audit has no CRITICAL/HIGH open (or Richard accepted each explicitly). `handoff.md` + `docs/handoff/` updated. Drift rules reviewed |

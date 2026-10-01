@@ -1,0 +1,53 @@
+# Intake decision record: skill-lifecycle intake mode (skills-lab/skills/skill-lifecycle)
+source: mattpocock/sandcastle@e99f832f26dc9d245c019a9ddd19fa5dee792427   # tag v0.12.0 = npm @ai-hero/sandcastle@0.12.0 (latest, 2026-06-29)
+scan:
+  tool: SkillSpector v2.3.7, --no-llm (static)
+  date: 2026-09-30
+  report: docs/harness/intake/sandcastle-v0.12.0-skillspector.json
+  score: 100
+  severity: CRITICAL
+  recommendation: DO_NOT_INSTALL
+  counts: {critical: 2, high: 177, medium: 274, low: 32, total: 485, suppressed: 0}
+findings:
+  - id: SC4 (x2)
+    location: docs/package.json:15 (next==16.0.0), package.json:82 (vitest==3.2.0)
+    classification: contextual capability
+    rationale: "Known-vulnerable versions in the repo's docs site and devDependencies. The published npm package ships dist/ with one runtime dep (@clack/prompts ^1.1.0) and doesn't include either."
+  - id: Credential Access (EnvResolver.ts:50, createWorktree.ts:315, interactive.ts:182, startSandbox.ts:191, SandboxProvider.ts:314, sandboxes/*, AgentProvider.ts:633, InitService.ts env template)
+    classification: confirmed capability
+    rationale: "Resolves keys declared in .sandcastle/.env (falling back to process.env for declared keys only) and injects them into the sandbox env so the agent can authenticate. Bounded by restriction SC-5."
+  - id: Privileged Container / Container Escape (sandboxes/docker.ts:97, sandboxes/podman.ts:106)
+    classification: contextual capability
+    rationale: "Opt-in provider options (devices, groups). Default off. Forbidden by restriction SC-3."
+  - id: External Script Fetching (Dockerfile:29 curl claude.ai/install.sh | bash; Dockerfile:11-16 gh apt repo; InitService.ts:212 scaffolded Dockerfile)
+    classification: confirmed capability
+    rationale: "Image build fetches first-party install scripts over the network, inside the container build. Replaced by a pinned npm install per restriction SC-4."
+  - id: Tool Misuse / Chaining Abuse (SandboxFactory.ts:43, SandboxLifecycle.ts:45, sandboxes/*.exec, vercel.ts:273 sh -c tar)
+    classification: contextual capability
+    rationale: "The library's purpose is executing commands inside sandboxes (sudo applies inside the container only)."
+  - id: Agent Config Directory Access (mountUtils.test.ts:705-721)
+    classification: heuristic false positive
+    rationale: "Test fixtures for user-declared mounts. The source mounts no host ~/.claude or ~/.codex by default. Session capture copies container transcripts back to the host projects dir (SC-7)."
+  - id: Env Variable Harvesting (EnvResolver.test.ts)
+    classification: heuristic false positive
+    rationale: "Unit tests of the env precedence logic."
+  - id: YARA agent_skill_destructive_autonomous_actions (docs/adr/0003-reuse-worktree-by-default.md:11)
+    classification: heuristic false positive
+    rationale: "The ADR explicitly rejects 'git reset --hard' in favour of --ff-only. grep finds no hard reset in src/."
+  - id: Credential Access / Tool Parameter Abuse in tests, docs, CHANGELOG, workflows, ideas/
+    classification: heuristic false positive
+    rationale: "Test, documentation and CI files not shipped in the package."
+provenance:
+  observed_at: 2026-09-30
+  signals: [owner mattpocock (also mattpocock/skills, previously approved 2026-09-10), MIT, 8193 stars, created 2026-03-17, regular releases v0.7.0 to v0.12.0, npm dist-tag latest = 0.12.0]
+  cautions:
+    - "Repo is ~6 months old and the last push was 2026-06-29 (3 months without a release)."
+    - "Open issues affect this setup: #854 (worktree git metadata corruption, all OSes), #859/#876/#924/#940/#996/#904 (Windows)."
+    - "The isolatedPaths fix (PR #874) isn't in v0.12.0."
+    - "Popularity is social evidence, not proof of safety."
+scope:
+  selected: ["@ai-hero/sandcastle@0.12.0 as a root devDependency", "docker() provider", "createSandbox/run/exec/Output API", "claudeCode() agent"]
+  excluded: ["noSandbox() for AFK runs", "vercel(), daytona() providers", "merge-to-head / head strategies", "devices/groups/network/docker-socket options", "scaffolded curl|bash Dockerfile line", "running on the Windows host"]
+  placement: project-local devDependency, run only from the WSL agent-farm clone
+verdict: APPROVE_WITH_RESTRICTIONS   # restrictions SC-1..SC-9 in docs/harness/sandcastle.md §2
+installed: false   # installation happens in ticket M0-03 (allowlist) + M0-16 (farm setup)

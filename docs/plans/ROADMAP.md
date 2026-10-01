@@ -1,6 +1,9 @@
 # ROADMAP
 
-> One milestone at a time [005]. **Full cards exist only for M0 and M1.** For M2–M7 the orchestrator
+> One milestone at a time [005]. Tickets are **one file each** under `docs/plans/<M>/tickets/` (local-markdown
+> tracker, `docs/agents/issue-tracker.md`). Parallel waves run in sandcastle sandboxes (Mode B,
+> `docs/harness/sandcastle.md`) from M0 wave 4. M2+ tickets are generated with the `to-tickets` skill.
+> **Full cards exist only for M0 and M1.** For M2–M7 the orchestrator
 > expands the titles below into full cards (`docs/harness/task-card-template.md`) at the start of
 > that milestone, from `docs/spec/*`, because pre-written cards go stale. Every milestone ends with
 > gate G4 (`docs/harness/gates.md`).

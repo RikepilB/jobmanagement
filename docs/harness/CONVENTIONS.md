@@ -1,7 +1,7 @@
 # CONVENTIONS: rules every agent follows (the Drift Loop target)
 
 > Read before every card. **Append-only:** when review finds a deviation, the orchestrator adds a
-> numbered rule under §9 with the date and the card that exposed it. Rules are hard ("never X",
+> numbered rule under §10 with the date and the card that exposed it. Rules are hard ("never X",
 > "always Y"), never "try to keep it clean" [008].
 
 ## 1. Stack (pinned: see `docs/spec/architecture.md` §2)
@@ -16,7 +16,8 @@
 - CLI: commander 15. Build: tsup. Tests: Vitest 5.
 
 ## 2. Dependency allowlist (SEC-16)
-Only the packages pinned in `architecture.md` §2 plus their `@types/*`. **Implementers never edit
+Only the packages pinned in `architecture.md` §2 plus their `@types/*` (this includes the root devDependencies
+`@ai-hero/sandcastle@0.12.0` and `tsx`, used only by `.sandcastle/`). **Implementers never edit
 any `package.json` or the lockfile.** If a card seems to need a package, report BLOCKED with the
 package name, the reason, and an alternative that uses existing deps. The orchestrator decides and
 adds it in a serialised card after a local review (maintainer, licence, install scripts). A registry
@@ -94,7 +95,21 @@ apps/server/src/modules/<name>/
 - Finish with the card's acceptance commands, then `pnpm verify`, and paste the tail of the output
   into your report.
 
-## 9. Drift-loop rules (append below; newest last)
+## 9. Skills: which one, when (project-local, pinned `mattpocock/skills@3cca18b`)
+| Situation | Skill | Who |
+|---|---|---|
+| Implementing a ticket: write the failing test for one acceptance behaviour, make it pass, repeat (vertical, one behaviour at a time; never write all the tests first) | `tdd` | implementer |
+| A gate fails or a test is flaky and the cause isn't obvious | `diagnosing-bugs` (together with `debug-evidence-loop` / `docs/harness/gates.md` §4) | implementer, orchestrator |
+| `git merge` of a card branch conflicts | `resolving-merge-conflicts` | orchestrator |
+| Expanding the next milestone (M2+) into tickets: tracer-bullet vertical slices with `Blocked by:` edges, written to `docs/plans/<M>/tickets/` | `to-tickets` (then shape each ticket with `docs/harness/task-card-template.md`). **Its frontmatter has `disable-model-invocation: true`**, so Richard runs `/to-tickets` at milestone start, or the orchestrator reads `.claude/skills/to-tickets/SKILL.md` and follows its steps by hand | Richard / orchestrator |
+| Editing `AGENTS.md`, CONVENTIONS, harness prompts, `.sandcastle/*-prompt.md` or ticket templates | `writing-for-agents` | orchestrator |
+
+Rules: skills don't override this file. If a skill's advice conflicts with CONVENTIONS or a ticket's
+contract, the ticket and CONVENTIONS win, and the conflict becomes a Drift-loop rule. Skills that need
+a tracker read `docs/agents/issue-tracker.md`. Don't add or upgrade skills without a new intake
+record in `docs/harness/intake/`.
+
+## 10. Drift-loop rules (append below; newest last)
 <!-- Format: R<n> (YYYY-MM-DD, card <ID>): <hard rule>. Why: <one line>. -->
 R1 (2026-09-30, planning): Routes are registered only via `defineRoute` with a scope. Why: SEC-01
 inventory test.

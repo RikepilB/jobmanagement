@@ -1,0 +1,21 @@
+# Intake decision record: reuses the existing SkillVault review (no new scan needed for the pinned copy)
+source: mattpocock/skills@3cca18b368ae95cdbdebbff572ccafa662551015
+prior_record: PROYECTOS/SkillVault/deploy/06-MATT-POCOCK/manifest.json   # scanned 2026-09-10, verdict APPROVE_PINNED_SUBSET
+scan:
+  reports: [SkillVault/docs/skillspector-scans/mattpocock-selected-20260910.json, SkillVault/docs/skillspector-scans/mattpocock-skills-20260910.json]
+  high_findings_traced: [P6 diagnosing-bugs/scripts/hitl-loop.template.sh:10 -> heuristic false positive, TM2 to-tickets/SKILL.md:40 -> heuristic false positive]
+provenance:
+  observed_at: 2026-09-30
+  signals: [owner mattpocock, MIT, 272201 stars, upstream last push 2026-09-29]
+  cautions: ["Upstream has moved past the pinned commit. Upgrading = a new SkillSpector scan + updated record."]
+scope:
+  selected: [tdd, diagnosing-bugs, resolving-merge-conflicts, to-tickets, writing-for-agents]
+  excluded:
+    - "code-review: name collides with the built-in /code-review skill"
+    - "handoff: Richard's handoff-context owns this"
+    - "grill-me/grilling: Richard's grill-with-docs composes them"
+    - "implement, triage, wayfinder, to-spec, improve-codebase-architecture: overlap with the harness roles or not needed before M2. Revisit per milestone"
+    - "setup-matt-pocock-skills: its outputs were written by hand to docs/agents/ and AGENTS.md"
+  placement: project-local, deployed with skill-profile.ps1 (-> .agents/skills) and mirrored to .claude/skills (Claude Code reads only .claude/skills). Keep the two copies byte-identical (gate check in M0-14)
+deployed_at: 2026-09-30
+verdict: APPROVE_PINNED_SUBSET

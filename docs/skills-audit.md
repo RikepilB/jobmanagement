@@ -30,6 +30,17 @@ linkedin-post, worksmith (Jira/Confluence), the productivity plugin, and the pdf
 | `find-note` | Pull Career OS context (playbooks, audience matrix) on demand | P2, P4 | "Where is the connection note audience matrix?" | Returns the `03_Career_OS/Networking/...` path | NOT RUN |
 | `apollo:enrich-lead` | Optional **email provider** in the resolution chain | P4 | "Enrich: Contact A, Company X" (synthetic) | Returns email + confidence, **shows credit cost** before spend | NOT RUN: **Apollo MCP needs authorization first** (claude.ai connector settings) |
 
+### Matt Pocock skills + sandcastle (added 2026-09-30, ADR-020)
+| Skill / tool | Where it plugs in | Status |
+|---|---|---|
+| `tdd` (pinned mattpocock/skills@3cca18b, project-local) | Implementers: one acceptance behaviour at a time, red → green → refactor | deployed to `.claude/skills` + `.agents/skills`. NOT RUN yet (first use in M0 wave 4) |
+| `diagnosing-bugs` | Failing gates, alongside `debug-evidence-loop` | deployed. NOT RUN |
+| `resolving-merge-conflicts` | Orchestrator merges (G2) | deployed. NOT RUN |
+| `to-tickets` | Expanding M2+ into tracer-bullet tickets in `docs/plans/<M>/tickets/` (tracker config: `docs/agents/issue-tracker.md`) | deployed. NOT RUN |
+| `writing-for-agents` | Editing AGENTS.md, CONVENTIONS, prompts, ticket templates | deployed. NOT RUN |
+| **sandcastle** `@ai-hero/sandcastle@0.12.0` | Mode B wave runner in Docker sandboxes (`docs/harness/sandcastle.md`) | intake APPROVE_WITH_RESTRICTIONS. Not installed; install via M0-03 + M0-16 |
+| Excluded for now | `code-review` (name clash with the built-in), `handoff` (handoff-context), `grill-me` (grill-with-docs), `implement`, `triage`, `wayfinder`, `to-spec`, `improve-codebase-architecture` (revisit per milestone: `improve-codebase-architecture` fits the post-v1 abstraction routine) | recorded in `docs/harness/intake/mattpocock-skills.yaml` |
+
 ## 2. Improve
 
 | Skill / asset | Problem found | Change |

@@ -35,19 +35,31 @@ skills.
 | Local evidence first; confirm before registry calls; never change deps during a scan | skill `dependency-security-scan` | Implementers never add packages. The dependency allowlist in CONVENTIONS |
 | Safety net, read-only audit, move-only, one file per commit, verify against the baseline | skill `clean-vibe-codebase` | Protocol for porting code (ScoutLane, JobSync, career-ops) and for later cleanups |
 | Never invent facts. Unknown → `[VERIFY: …]` | skill `score-resume` | Every generated artifact (fixtures, docs, M2 prompts) follows this |
+| Tracer bullets: each ticket is a thin **vertical** slice that is demoable alone and fits one fresh context. Prefactor first: "make the change easy, then make the easy change" | Matt Pocock `to-tickets` | M2+ tickets are generated with `to-tickets`. M0/M1 tickets already follow it (one module slice each) |
+| Red-green-refactor, one behaviour at a time | Matt Pocock `tdd` | Implementers drive each acceptance bullet test-first |
+| Run AFK agents in isolated sandboxes on their own branches. Commits come back, and nothing merges itself | Matt Pocock `sandcastle` | **Mode B** orchestration (`sandcastle.md`) |
+| Ticket files with status + blocking edges are the queue agents pull from | Matt Pocock local-markdown tracker | `docs/agents/issue-tracker.md`. The wave runner computes the frontier from `Blocked by:` |
 
 ## 2. Roles and models
 
 | Role | Model (Claude Code Agent tool) | Tools | Writes code? |
 |---|---|---|---|
 | **Orchestrator** | Opus (main session) | all | Only integration fixes, merges, CONVENTIONS/plan edits, and the serialised "shared" cards when it chooses |
-| **Implementer** | `model: "sonnet"`, `isolation: "worktree"` | Read, Edit, Write, Bash, Grep, Glob | Yes, only the card's owned files |
-| **Verifier** | `model: "haiku"`, in its own detached worktree (`git worktree add --detach`) | Read, Bash, Grep, Glob | **Never** |
+| **Implementer** | Mode A: `model: "sonnet"`, `isolation: "worktree"`. **Mode B: sandcastle `claudeCode("claude-sonnet-5")` in a Docker sandbox** | Read, Edit, Write, Bash, Grep, Glob | Yes, only the card's owned files |
+| **Verifier** | Mode A: `model: "haiku"`, in its own detached worktree. **Mode B: sandcastle `claudeCode("claude-haiku-4-5-20251001")` in the same warm sandbox, structured `VerifierReport`** | Read, Bash, Grep, Glob | **Never** |
 | **Security auditor** | `model: "opus"` | Read, Bash, Grep, Glob | **Never** |
 | **Comprehension checker** | `model: "haiku"` | Read | Never. It reads a card cold and lists ambiguities before dispatch (§5) |
 
 Prompts live in [`prompts/`](prompts). M0-02 installs them as `.claude/agents/jm-*.md` so they can be
 invoked by name. Codex users read the same content through `AGENTS.md`.
+
+## 2b. Two execution modes
+- **Mode A (Agent-tool worktrees):** M0 waves 1–3, serialised or orchestrator tickets, and any time
+  Docker/WSL is unavailable.
+- **Mode B (sandcastle, default for parallel waves from M0 wave 4):** the orchestrator runs
+  `scripts/farm-sync.sh` then `npx tsx .sandcastle/run-wave.ts --milestone <M> --wave <n>` in the WSL
+  farm, then reviews the reports and branches in the canonical repo and merges. Details and
+  mandatory restrictions: [`sandcastle.md`](sandcastle.md).
 
 ## 3. The loop (per milestone)
 
@@ -57,7 +69,7 @@ orchestrator
  ├─ (M2+) expand the next milestone's cards just-in-time from docs/spec using the template
  ├─ for each wave in order:
  │    ├─ comprehension check (haiku) on each card in the wave → fix the ambiguities it finds
- │    ├─ dispatch ≤4 implementers in parallel (sonnet, worktree), one card each
+ │    ├─ dispatch ≤4 implementers in parallel: Mode B `run-wave.ts` (sandcastle) or Mode A (sonnet, worktree), one ticket each
  │    ├─ on DONE  → verifier (haiku) on that branch → PASS? merge to main + re-run `pnpm verify`
  │    │           FAIL? send the report back to the same implementer once → still FAIL? orchestrator
  │    │           runs the debug-evidence-loop protocol or re-scopes the card

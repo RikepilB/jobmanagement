@@ -132,3 +132,22 @@ simpler models.
 data dir `~/.jm`, PathPeer export in `C:\Users\a2021\dev\jobmanagement-private`. **Why:** OneDrive
 corrupts venvs, git objects and live SQLite files on this machine (ResumeScorer PROJECT.md). Parallel
 worktrees and `node_modules` make that worse.
+
+## 2026-09-30: ADR-020 Sandcastle (Mode B), Matt Pocock skills, one-file-per-ticket tracker
+**Status:** Proposed (Richard asked for sandcastle + mattpocock skills). **Decision:**
+(1) Parallel agent waves run in **sandcastle** Docker sandboxes (`@ai-hero/sandcastle@0.12.0`, pinned)
+from a disposable WSL agent-farm clone. Agent-tool worktrees stay as Mode A. Intake verdict:
+APPROVE_WITH_RESTRICTIONS after SkillSpector (CRITICAL/DO_NOT_INSTALL raw) and a full trace of every
+HIGH/CRITICAL finding (`docs/harness/intake/sandcastle.yaml`). Restrictions SC-1..SC-9 are mandatory.
+(2) A project-local subset of the approved, pinned `mattpocock/skills@3cca18b`: `tdd`, `diagnosing-bugs`,
+`resolving-merge-conflicts`, `to-tickets` (user-invoked only: `disable-model-invocation: true`),
+`writing-for-agents`. (3) Task cards became **one file per
+ticket** under `docs/plans/<M>/tickets/`, with `Status:`/`Blocked by:` headers (the Matt Pocock
+local-markdown tracker convention), so the skills and the wave runner share one queue. The
+orchestrator is the single writer of ticket status. **Why:** container isolation and AFK parallel
+waves beat host worktrees for simpler-model implementers, and a file-per-ticket queue is what both
+`to-tickets` and a sandcastle runner consume. **Cost:** WSL + Docker setup (M0-16). Open sandcastle
+bugs (#854 worktree metadata, Windows #859 and others) are contained by running only from the
+disposable farm. The two skill copies (`.claude/skills` and `.agents/skills`) must stay identical
+(gate).
+

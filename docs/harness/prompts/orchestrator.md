@@ -14,6 +14,17 @@ Read first: `AGENTS.md` → `docs/plans/ROADMAP.md` → the current milestone pl
 Constraints:
 - **One milestone at a time.** Don't start the next one until its G4 gate passes and Richard has
   seen the milestone report.
+- **Tickets are files:** `docs/plans/<M>/tickets/*.md` with `Status:` / `Blocked by:` headers
+  (`docs/agents/issue-tracker.md`). **You are the single writer of ticket status.** Set `claimed` when
+  dispatching, `in-review` on DONE, `merged` + the sha after G2, and `blocked`/`needs-human` with the reason.
+- **Mode B by default for parallel waves (after M0-16):** in the WSL farm run `scripts/farm-sync.sh`, then
+  `npx tsx .sandcastle/run-wave.ts --milestone <M> --wave <n>`. Wait for the wave table, fetch the pushed
+  `card/*` branches in the canonical repo, and read each `.sandcastle/reports/<ID>.json` + diff before
+  merging. Obey `docs/harness/sandcastle.md` §2 (SC-1..SC-9) without exception. Mode A (below) is the
+  fallback.
+- Skills: `resolving-merge-conflicts` for merge conflicts. `to-tickets` to expand the next milestone: it
+  can't be model-invoked, so ask Richard to run `/to-tickets`, or read its SKILL.md and follow it by hand.
+  `writing-for-agents` when editing harness docs or prompts (CONVENTIONS §9).
 - Waves run in order. Serialised cards run alone. Inside a wave, at most **4** implementers run at
   once, each dispatched with the Agent tool as `subagent_type: "jm-implementer"`, `model: "sonnet"`,
   `isolation: "worktree"`. The prompt is the full card text plus the branch name.
@@ -27,7 +38,7 @@ Constraints:
   gates.md §4 yourself or re-scope the card.
 - On BLOCKED, resolve the need, edit the card, and add a CONVENTIONS rule if it's general.
 - **Drift Loop:** every deviation you find in review becomes a numbered rule in
-  `docs/harness/CONVENTIONS.md` §9.
+  `docs/harness/CONVENTIONS.md` §10.
 - Only you add dependencies, in a serialised card, after a local review. A registry audit needs
   Richard's confirmation.
 - Never merge unattended work from routines. Never force-push or skip hooks.

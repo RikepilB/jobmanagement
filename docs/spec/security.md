@@ -28,6 +28,7 @@
 | **SEC-18** DNS-rebinding protection | Requests whose `Host` header isn't in the allowed list (`127.0.0.1:<port>`, `localhost:<port>`, `JM_PUBLIC_URL` host) are rejected with 421/400, on **all** routes including `/mcp` (the MCP spec's local-server warning) | Test: `Host: evil.example` → rejected | M0-07 |
 | **SEC-19** Audit trail | Login success/failure, token create/revoke, imports and exports write `activities` (actor + summary, never secrets) | Tests in M0-08 and M1-11/12 | M0-08, M1-11, M1-12 |
 | **SEC-20** MCP blast radius | No delete tools. Write tools need the `write` scope. `/mcp` requires bearer auth (no cookie) | MCP test: `tools/list` contains no name matching `delete\|remove_all` | M0-10 |
+| **SEC-22** Agent orchestration sandbox | Parallel agent runs (Mode B) follow `docs/harness/sandcastle.md` §2 SC-1..SC-9: WSL farm only, `docker()` only, no privileged options, pinned image without curl-pipe-bash, a dedicated revocable setup-token as the only secret in `.sandcastle/.env`, per-ticket branches, and no auto-merge | Gate: grep `.sandcastle/**` for `noSandbox`/`devices:`/`groups:`/`docker.sock` = 0. `git check-ignore .sandcastle/.env` succeeds | M0-16, M0-14 |
 | **SEC-21** Export/backup PII | Exports exclude `password_hash`, `sessions` and `api_tokens`. Backups stay in the data dir. The docs warn that exports hold third-party PII | Test on `/exports/json` keys | M1-12 |
 
 ## Evidence rule (all audits and verifier reports)
