@@ -1,3 +1,7 @@
+> **The handoff tree now lives in `docs/handoff/`** (father `docs/handoff/HANDOFF.md` + one folder per
+> session). This root file is the legacy summary as of 2026-09-30. The pending interrupted request
+> (GitHub, Vercel, bulk import, PathPeer data) is in `docs/handoff/_meta/LATER-TASKS.md`.
+
 # Goal
 
 Replace PathPeer (account archived, read-only) with an **MIT** open-source, self-hosted,
