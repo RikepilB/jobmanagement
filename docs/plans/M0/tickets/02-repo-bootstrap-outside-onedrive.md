@@ -1,6 +1,6 @@
 # M0-02 · Repo bootstrap outside OneDrive
 
-Status: in-progress
+Status: merged
 Blocked by: none
 Wave: 1
 Owner: orchestrator
@@ -38,3 +38,4 @@ delete the OneDrive folder.
 ## Comments
 
 - 2026-09-30: repo created at `C:/Users/a2021/dev/jobmanagement` and docs committed (`3d23246`). Remaining: LICENSE, README, .gitignore, .gitattributes, .node-version, `.claude/agents/jm-*.md`.
+- 2026-10-03: orchestrator: done. Added LICENSE, THIRD_PARTY_NOTICES.md (Matt Pocock skills MIT text), README, .gitignore (also ignores handoff transcripts/snapshots), .gitattributes, .editorconfig, .node-version, `.claude/agents/jm-*.md`, plus OSS files (CONTRIBUTING, CODE_OF_CONDUCT, SECURITY, `.github/` templates). Deviations, at Richard's explicit request: a public GitHub repo `RikepilB/jobmanagement` was created and pushed (overrides the "don't push" line); history has 4 commits instead of one.

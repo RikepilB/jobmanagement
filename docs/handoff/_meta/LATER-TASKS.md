@@ -6,7 +6,7 @@
 
 | Item | Notes / gate before starting |
 |---|---|
-| GitHub repo for `C:\Users\a2021\dev\jobmanagement` | Outward-facing: confirm the name, visibility (public vs private before the M7 scrub of local paths and personal ids) and owner (`RikepilB`). Push only after explicit OK. Merge `docs/sandcastle-mattpocock-harness` into `main` first |
+| ~~GitHub repo~~ **DONE 2026-10-03** | Richard asked explicitly: public `RikepilB/jobmanagement`, MIT, OSS files added (M0-02). Branch fast-forwarded into `main` and pushed. Local paths with the Windows username remain in docs (low sensitivity, not rewritten) |
 | Vercel deployment | There's **no app code yet** (M0 not built). ADR-015 targets local `jm serve` + SQLite. Vercel needs a hosted DB (e.g. Turso/libSQL, Neon) plus a serverless adapter, which conflicts with the single-owner local design and SEC-07/SEC-18. Decide hosting (blueprint §13 #3) first. Possibly a static docs site only (Astro, M7) |
 | "Test the project management" | Means building M0 → M1 (the harness is ready). Start with the M0-01 export + finishing M0-02 |
 | Bulk import: CSV files, PDFs, docs | New scope. CSV import of jobs/contacts fits M1-11 (imports) as a new ticket. PDF/doc ingestion (resumes, JDs) fits M2 (resume parsing; the PDF dependency needs intake). Write the tickets with `to-tickets` |

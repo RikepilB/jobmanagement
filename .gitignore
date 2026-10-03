@@ -1,0 +1,44 @@
+# Dependencies and build output
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+.turbo/
+.vite/
+
+# Secrets: never commit. Keep a redacted .env.example instead.
+.env*
+!.env.example
+.sandcastle/.env
+
+# Local data (SQLite DBs, data dir, backups). Contains personal data.
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+data/
+.jm/
+
+# Captures and exports. May contain personal or third-party data.
+*.har
+captures.jsonl
+pathpeer-export*/
+
+# Session archives. Full transcripts and auto-snapshots can quote private URLs and
+# personal data. Only the curated HANDOFF.md digests are tracked.
+docs/handoff/**/transcript.md
+docs/handoff/**/snapshot-*.md
+
+# Sandcastle runtime state
+.sandcastle/logs/
+.sandcastle/worktrees/
+
+# Editor and OS noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.log
